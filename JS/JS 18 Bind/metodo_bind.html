@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     <h2>Método Bind()</h2>
+    <p id="demo1"></p>
+    <script>
+        const pessoa = {
+            nome: "João",
+            sobrenome: "Silva",
+            nomeCompleto: function() 
+                {return this.nome + " " + this.sobrenome;}
+        };
+        const pessoa2 = {
+            nome: "Maria",
+            sobrenome: "Oliveira"
+        };
+        document.querySelector = pessoa.nomeCompleto.bind(pessoa2); 
+    </script>
+</body>
+</html>

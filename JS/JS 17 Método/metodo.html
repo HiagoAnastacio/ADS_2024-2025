@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Método</title>
+</head>
+<body>
+    <h2>Método call()</h2>
+    <p id="demo1"></p>
+    <script>
+        const pessoa = {
+            nomeCompleto: function() {return this.nome + " " + this.sobrenome;}
+        };
+        const pessoa1 = {
+            nome: "João",
+            sobrenome: "Silva"
+        };
+        const pessoa2 = {
+            nome: "Maria",
+            sobrenome: "Oliveira"
+        };
+        document.querySelector = pessoa.nomeCompleto.call(pessoa1); 
+    </script>
+</body>
+</html>

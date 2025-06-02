@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flecha</title>
+</head>
+<body>
+    <h2>Flecha</h2>
+    <p id="demo1"></p>
+    <script>
+        const myFunction = (a,b) => {
+            console.log(b);
+            return a * b;
+        }
+        document.querySelector("#demo1").innerHTML = myFunction;  
+    //    const myFunction = (a,b) => {
+    //     if (a < 0){
+    //         return Math.abs(a) * b; 
+    //     }
+    //     return a * b;
+    //    };
+    //    const myFunction2 = (a,b) => a * b;
+    //    let txt = (a => a * a).name;
+        const txt = (...args) => {
+            let soma = 0;
+                for(let arg of args) soma += arg;
+                return soma;
+        } 
+        document.querySelector("#demo1").innerHTML = txt (1,2,3,4,5);      
+     </script>
+</body>
+</html>

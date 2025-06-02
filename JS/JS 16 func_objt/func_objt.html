@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Objeto</title>
+</head>
+<body>
+    <h2>Função come objeto</h2>
+    <p id="demo1"></p>
+    <p id="demo2"></p>
+    <p id="demo3"></p>
+    <script>
+      
+        function minhaFunc1(a, b){
+            return a * b
+        }
+        let texto = minhaFunc1.toString();
+        document.querySelector("#demo1").innerHTML = texto;
+ 
+        let minhaFunc2 = (a, b) => this;
+ 
+        document.querySelector("#demo2").innerHTML = minhaFunc2();
+ 
+        const Obj = {
+            nome: "João",
+            sobrenome: "Minucci",
+            nomeCompleto: function() {return this.nome + " " + this.sobrenome}
+        }
+        document.querySelector("#demo3").innerHTML = Obj.nomeCompleto
+        
+        function minhaFunc3(arg1, arg2) {
+            this.nome = arg1;
+            this.sobrenome = arg2;  
+        }
+        const meuObj = new minhaFunc3("teste", "1");
+
+        const minhaFunc4 = (a , b) => a * b;
+        const meuObj2 = new minhaFunc4(); // Isso não funciona, pois arrow functions não podem ser usadas como construtores.
+    </script>
+</body>
+</html>

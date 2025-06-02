@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Closure</h2>
+    <p id="demo1"></p>
+    <script>
+        function incrementar() {
+            let contador = 0;
+            return contador++;
+        }
+        let contar = 0;
+        contar = incrementar();
+        contar = incrementar();
+        contar = incrementar();
+        document.querySelector("#demo1").innerHTML = "Valor do contador: " + contador;
+    </script>
+</body>
+</html>
