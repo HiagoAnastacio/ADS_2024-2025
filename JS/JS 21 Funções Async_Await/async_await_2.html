@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Execução de uma operação em etapas</h1>
+    <button type="button" onclick="">Executar função</button>
+    <br>
+    <output>Lorem ipsum dolor sit amet.</output>
+
+    <script>
+        const output = document.querySelector('output');
+        function esperar(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms))
+        };
+        async function executar() {
+            output.innerText = 'Etapa 1:Iniciando...';
+
+            await esperar(2000);
+            output.innerHTML += `<br>Etapa 2:Processando...`
+
+            await esperar(2000);
+            output.innerHTML += `<br>Etapa 3:Finalizando...`
+
+            await esperar(2000);
+            output.innerHTML += `<br>Etapa 4:Concluído!`
+        }
+    </script>
+</body>
+</html>
+

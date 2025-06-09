@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar novo repositório</title>
+</head>
+<body>
+    <h1>Executando validação</h1>
+    <h2>Nome do repositório*</h2>
+    <input type="text" id="repoName" onkeyup="validar()" required autofocus>
+    <br><br>
+    <output></output>
+
+    <script>
+        const output = document.querySelector('output');
+        const repoLista = ['repo-flex', 'repo-cidade', 'repo-api'];
+
+        let chamadaAtual = 0
+
+        function verificarNomeRepoDisponivel(nome, chamada){
+            return new Promise((resolve, reject) => {
+                setTimeout(()=>{
+
+                    if (chamada !== chamadaAtual) return;
+
+                    if (repoLista.includes(nome.toLowerCase())) {
+                        reject(`❌ O repositório "${nome}" já existe. Por favor, escolha outro nome.`);
+                    }
+                    else {
+                        resolve(`✅ O repositório "${nome}" está disponível.`);
+                    }
+                },1000) // Teoricamente é instantâneo.
+            })
+        }
+        async function validar() {
+
+            const minhaChamada = ++chamadaAtual
+
+            output.innerHTML = '';
+            const repoName = document.getElementById('repoName').value;
+            if (repoName.length < 3) {
+                output.innerText = 'O nome do repositório deve ter pelo menos 3 caracteres.';
+                return; // Early return para evitar chamadas desnecessárias.
+            }
+            try {
+                const resultado = await verificarNomeRepoDisponivel(repoName, minhaChamada);
+                if (minhaChamada === chamadaAtual){ // Verifica se a chamada é a mais recente
+                    output.innerHTML += `${resultado}<br>`
+                }
+            } 
+            catch (error) {
+                if (minhaChamada === chamadaAtual){ // Verifica se a chamada é a mais recente
+                    output.innerHTML += `${error}<br>`
+                }
+
+            }
+        }
+    </script>
+</body>
+</html>

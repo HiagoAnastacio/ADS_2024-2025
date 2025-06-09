@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Execução de uma operação</h1>
+    <button type="button" onclick="">Executar função</button>
+    <br>
+    <output>Lorem ipsum dolor sit amet.</output>
+
+    <script>
+        const output = document.querySelector('output');
+        console.log(`o que tem dentro do output: \n`);
+        console.log(output);
+
+        const FunAsync = () => {
+            return new Promise((resolve, reject)=>{
+                setTimeout(() => {resolve = resolve("Tarefa bem-sucedida");}, 2000);
+            })
+        };
+            
+        async function executarOperacao() {
+            output.innerText = "Executando operação...";
+            try {
+                const resultado = await FunAsync();
+                output.innerHTML += `<br> ${resultado}`;
+            }
+            catch (error) {
+                output.innerHTML += `<br> Ocorreu um erro: ${error}`;
+            }
+        };
+    </script>
+</body>
+</html>
