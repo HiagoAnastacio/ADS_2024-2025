@@ -48,7 +48,9 @@
                 controller.abort(); // Cancela a chamada anterior
                 controller = new AbortController(); // Cria um novo AbortController
 
-                outputNR.innerHTML = ""; // Limpa a saída
+                verificarNomeDisponivel(nome, controller.signal)
+                    .then(mensagem => outputNR.innerHTML = mensagem)
+                    .catch(erro => outputNR.innerHTML = erro);
 
             };
         };
