@@ -112,7 +112,7 @@
                     outputSenhaRepositorio.innerHTML = "A senha deve ter pelo menos uma letra maiúscula";
                     return;
                 }
-                if (/[A-Za-z0-9]/.test(senhaRepositorio)) {
+                if (!/[^A-Za-z0-9]/.test(senhaRepositorio)) {
                     outputSenhaRepositorio.innerHTML = "A senha deve ter pelo menos um dos caracteres especiais. Ex.: !, @, #";
                     return;
                 }
