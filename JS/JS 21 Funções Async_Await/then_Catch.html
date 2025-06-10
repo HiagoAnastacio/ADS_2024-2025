@@ -8,7 +8,7 @@
 <body>
     <h1>Executando validação só que com outra lógica.</h1>
     <h2>Nome do repositório*</h2>
-    <input type="text" id="repoName" onkeyup="validação.validar()" required autofocus>
+    <input type="text" id="nomeRepo" onkeyup="validacao.validar()" required autofocus>
     <br><br>
     <output></output>
 
@@ -34,32 +34,33 @@
                     }, 1000); //praticamente instantâneo                  
                 })                                                      
             }                                                          
-            return
-                validar; () => {
-    
-                const minhaChamada = ++chamadaAtual
-    
-                output.innerHTML = ""                    
-                const nome = document.getElementById("nomeRepo").value
-    
-                if(nome.length < 3) {
-                    output.innerText = "O nome do seu repositório deve ter pelo menos três caracteres."
-                    return; // "Early Return"
-                }
-            
-                verificarNomeRepositorioDisponivel(nome, minhaChamada)
-                    .then(mensagem => {
-                        if(minhaChamada === chamadaAtual){
-                            output.innerHTML += `${mensagem}<br>`;
-                        }
-                    }).catch(erro => {
-                        if (minhaChamada === chamadaAtual) {
-                            output.innerHTML += `${erro}<br>`
-                        }
-                    });
-            };                                                   
+            return {
+                validar: () => {
+
+                    const minhaChamada = ++chamadaAtual
+        
+                    output.innerHTML = ""                    
+                    const nome = document.getElementById("nomeRepo").value;
+        
+                    if(nome.length < 3) {
+                        output.innerText = "O nome do seu repositório deve ter pelo menos três caracteres."
+                        return; // "Early Return"
+                    }
+                
+                    verificarNomeRepositorioDisponivel(nome, minhaChamada)
+                        .then(mensagem => {
+                            if(minhaChamada === chamadaAtual){
+                                output.innerHTML += `${mensagem}<br>`;
+                            }
+                        }).catch(erro => {
+                            if (minhaChamada === chamadaAtual) {
+                                output.innerHTML += `${erro}<br>`
+                            }
+                        });
+                }  
+            };                                               
     };
-    const validação = criarValidador();
+    const validacao = criarValidador();
     </script>
 </body>
 </html>

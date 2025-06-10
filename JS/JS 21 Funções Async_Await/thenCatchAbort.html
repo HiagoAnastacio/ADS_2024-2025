@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar novo repositório</title>
+</head>
+<body>
+    <h1>"Then e Catch" usando "AbortController".</h1>
+    <p></p>
+    <form action="">
+        <label for="nomeReposito">Nome do Repositório</label>
+        <input type="text" id="nomeReposito" onkeyup="validarNomeReposito()" required autofocus>
+        <output></output>
+    </form>
+    <script>
+        const outputNR = document.getElementById("nomeReposito");
+        const repositoriosExistentes = ['api-com-fastapi', 'pagina-cidade', 'pratica-flexbox'];
+
+        function criarValidadores() {
+            let controller = new AbortController();
+
+            function verificarNomeDisponivel(nome, signal) {
+                return new Promise((resolve, reject) => {
+                    const atraso = setTimeout(()=> {
+                        if (signal.aborted){
+                            reject("Operação mal-sucedida: A operação foi abortada.");
+                            return;
+                        }
+                        if (repositoriosExistentes.includes(nome.toLowerCase())) {
+                            reject(`❌ O repositório "${nome}" já existe. Escolha outro nome.`);
+                        } else {
+                            resolve(`✅ O nome "${nome}" está disponível.`);
+                        }
+                    }, 1000);
+                });
+                signal.addEventListener("abort", () => {
+                    clearTimeout(atraso);
+                });
+            };
+
+            function validarNomeReposito() {
+                const NR = document.getElementById("nomeReposito").value.trim();
+                if (NR.length < 3) {
+                    outputNR.innerHTML = "O nome do repositório deve ter pelo menos três caracteres.";
+                    return; // Early Return
+                }
+                controller.abort(); // Cancela a chamada anterior
+                controller = new AbortController(); // Cria um novo AbortController
+
+                outputNR.innerHTML = ""; // Limpa a saída
+
+            };
+        };
+    </script>
+</body>
+</html>
