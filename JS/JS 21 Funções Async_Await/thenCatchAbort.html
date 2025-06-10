@@ -1,59 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar novo repositório</title>
+    <title>Then e catch</title>
 </head>
 <body>
-    <h1>"Then e Catch" usando "AbortController".</h1>
-    <p></p>
+    <h1>Then e Catch usando AbortController</h1>
+    <p>Nesta demonstração, vamos tratar do uso encadeado do then/catch para resolução de Promises usando um AbortController para evitar respostas consecutivas de chamadas de função que deveriam ter sido canceladas</p>
+
     <form action="">
-        <label for="nomeReposito">Nome do Repositório</label>
-        <input type="text" id="nomeReposito" onkeyup="validarNomeReposito()" required autofocus>
-        <output></output>
+        <label for="nomeRepositorio">Nome do repositório</label>
+        <input type="text" id="nomeRepositorio" onkeyup="validarNomeRepositorio()" required autofocus>
+        <output id="outputNomeRepositorio"></output>
+        <br>
+        <br>
+        <label for="senhaRepositorio">Senha do repositório</label>
+        <input type="text" id="senhaRepositorio" onkeyup="validarSenha()">
+        <output id="outputSenhaRepositorio"></output>
     </form>
+
     <script>
-        const outputNR = document.getElementById("nomeReposito");
-        const repositoriosExistentes = ['api-com-fastapi', 'pagina-cidade', 'pratica-flexbox'];
+        const outputNomeRepositorio = document.getElementById('outputNomeRepositorio');
+        const outputSenhaRepositorio = document.getElementById('outputSenhaRepositorio');
+        const repositoriosExistentes = [
+            "api-com-fastapi",
+            "pagina-cidade",
+            "Cadastro-vingadores",
+            "teste"
+        ];
 
         function criarValidadores() {
             let controller = new AbortController();
 
-            function verificarNomeDisponivel(nome, signal) {
+            function verificarNomeRepositorioDisponivel(nome, signal) {
                 return new Promise((resolve, reject) => {
-                    const atraso = setTimeout(()=> {
-                        if (signal.aborted){
-                            reject("Operação mal-sucedida: A operação foi abortada.");
+                    const atraso = setTimeout(() => { // Simula atraso de 1 segundo
+                        if (signal.aborted) { // Se a validação foi cancelada, não faz nada
+                            // reject("Consulta cancelada")
                             return;
                         }
-                        if (repositoriosExistentes.includes(nome.toLowerCase())) {
+
+                        if (repositoriosExistentes.includes(nome.toLowerCase())) { // Se o nome já existe
                             reject(`❌ O repositório "${nome}" já existe. Escolha outro nome.`);
                         } else {
-                            resolve(`✅ O nome "${nome}" está disponível.`);
+                            resolve(`✅ O nome "${nome}" está disponível.`); // Se está disponível
                         }
-                    }, 1000);
+                    }, 1000); // Simulando uma consulta.
                 });
-                signal.addEventListener("abort", () => {
-                    clearTimeout(atraso);
-                });
-            };
 
-            function validarNomeReposito() {
-                const NR = document.getElementById("nomeReposito").value.trim();
-                if (NR.length < 3) {
-                    outputNR.innerHTML = "O nome do repositório deve ter pelo menos três caracteres.";
-                    return; // Early Return
+                // Cancela o timeout se a validação for abortada
+                signal.addEventListener("abort", () => clearTimeout(atraso));
+            }
+
+            //===========================================================
+            // Função assíncrona para validar o NOME do repositório
+            //===========================================================
+            async function validarNomeRepositorio() {
+                const nomeRepositorio = document.querySelector('#nomeRepositorio').value.trim();
+
+                if (nomeRepositorio.length < 3) {
+                    outputNomeRepositorio.innerHTML = "O nome do repositório deve ter pelo menos 3 caracteres.";
+                    return;
                 }
-                controller.abort(); // Cancela a chamada anterior
-                controller = new AbortController(); // Cria um novo AbortController
 
-                verificarNomeDisponivel(nome, controller.signal)
-                    .then(mensagem => outputNR.innerHTML = mensagem)
-                    .catch(erro => outputNR.innerHTML = erro);
+                controller.abort(); // Cancela validação anterior, se houver
+                controller = new AbortController(); // Cria novo controller para esta chamada
 
-            };
-        };
+                outputNomeRepositorio.innerHTML = "Verficando disponibilidade..."; // Mensagem de espera
+
+                return verificarNomeRepositorioDisponivel(nomeRepositorio, controller.signal)
+                    .then(mensagem => outputNomeRepositorio.innerHTML = mensagem) // Se "resolve", mostra mensagem
+                    .catch(erro => outputNomeRepositorio.innerHTML = erro); // Se "reject", mostra erro
+            }
+
+            //===========================================================
+            // Função assíncrona para validar a SENHA do repositório
+            //===========================================================
+            let senhaController = new AbortController(); // Controlador para cancelar validação da senha
+
+            async function validarSenha() {
+                senhaController.abort(); // Cancela validação anterior, se houver
+                senhaController = new AbortController(); // Cria novo controller para esta chamada
+                const signal = senhaController.signal; // Sinal para controle de abort
+
+                outputSenhaRepositorio.innerHTML = "Validando senha..."; // Mensagem de espera
+
+                await new Promise((resolve, reject) => {
+                    const timeout = setTimeout(resolve, 700); 
+                    signal.addEventListener("abort", () => { // Se abortado, cancela timeout e rejeita
+                        clearTimeout(timeout);
+                        reject("Validação cancelada");
+                    });
+                }).catch(() => {
+                    return;
+                });
+
+                if (signal.aborted) return; // Se abortado, encerra a função
+
+                const senhaRepositorio = document.querySelector("#senhaRepositorio").value.trim();
+
+                if (senhaRepositorio.length < 8) {
+                    outputSenhaRepositorio.innerHTML = "A senha deve ter comprimento mínimo de 8 caracteres";
+                    return;
+                }
+                if (!/[0-9]/.test(senhaRepositorio)) {
+                    outputSenhaRepositorio.innerHTML = "A senha deve possuir pelo menos um número";
+                    return;
+                }
+                if (!/[A-Z]/.test(senhaRepositorio)) {
+                    outputSenhaRepositorio.innerHTML = "A senha deve ter pelo menos uma letra maiúscula";
+                    return;
+                }
+                if (/[A-Za-z0-9]/.test(senhaRepositorio)) {
+                    outputSenhaRepositorio.innerHTML = "A senha deve ter pelo menos um dos caracteres especiais. Ex.: !, @, #";
+                    return;
+                }
+                outputSenhaRepositorio.innerHTML = "✅Senha disponível.";
+            }
+
+            // Retorna as funções para uso externo
+            return { validarNomeRepositorio, validarSenha };
+        }
+
+        // Cria os validadores e pega as funções
+        const { validarNomeRepositorio, validarSenha } = criarValidadores();
+
+        //=================================================
+        // Confere se as funções retornam são assíncronas
+        //=================================================
+        const result = validarNomeRepositorio();
+        // true se validarNomeRepositorio retornar uma Promise
+        console.log(result instanceof Promise);
+
+        const resultado = validarSenha();
+        // true se validarSenha retornar uma Promise
+        console.log(resultado instanceof Promise);
     </script>
 </body>
 </html>
