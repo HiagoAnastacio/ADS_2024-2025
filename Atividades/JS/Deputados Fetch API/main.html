@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch API Deputados</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <h1 class="mb-4 text-center">Acha Deputados</h1>
+        <!-- Formulário de busca -->
+        <form id="formBusca" class="mb-4">
+            <div class="input-group">
+                <input type="text" id="nome" class="form-control" placeholder="Digite o nome do parlamentar" required autofocus>
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </form>
+        <!-- Mensagem de erro ou não encontrado -->
+        <div id="mensagem" class="mb-3 text-center text-danger"></div>
+        <!-- Formulário para exibir os dados do deputado -->
+        <form id="cardDeputado" class="card mx-auto shadow" style="max-width: 400px; display:none;">
+            <div class="card-body text-center">
+                <img id="fotoDeputado" src="" alt="Foto do deputado" class="rounded mb-3" width="100">
+                <div class="mb-3">
+                    <label for="nomeDeputado" class="form-label fw-bold">Nome</label>
+                    <input type="text" id="nomeDeputado" class="form-control text-center" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="partidoDeputado" class="form-label fw-bold">Partido / UF</label>
+                    <input type="text" id="partidoDeputado" class="form-control text-center" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="emailDeputado" class="form-label fw-bold">Email</label>
+                    <input type="text" id="emailDeputado" class="form-control text-center" readonly>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Bootstrap JS (opcional, para componentes interativos) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Ouvinte para o envio do formulário de busca
+        document.getElementById('formBusca').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            // Pega o valor digitado no input
+            const nome = document.getElementById('nome').value;
+
+            // Monta a URL da API usando o valor do input
+            const url = `https://dadosabertos.camara.leg.br/api/v2/deputados?nome=${encodeURIComponent(nome)}`;
+
+            // Faz a requisição para a API
+            fetch(url)
+                .then(resposta => resposta.json()) // Converte a resposta para JSON
+                .then(dados => {
+                    const deputados = dados.dados;
+                    if (deputados.length === 0) {
+                        // Esconde o card e mostra mensagem de não encontrado
+                        document.getElementById('cardDeputado').style.display = 'none';
+                        document.getElementById('mensagem').textContent = 'Nenhum deputado encontrado.';
+                    } else {
+                        // Preenche o formulário com os dados do primeiro deputado encontrado
+                        const dep = deputados[0];
+                        document.getElementById('fotoDeputado').src = dep.urlFoto;
+                        document.getElementById('fotoDeputado').alt = `Foto de ${dep.nome}`;
+                        document.getElementById('nomeDeputado').value = dep.nome;
+                        document.getElementById('partidoDeputado').value = `Partido: ${dep.siglaPartido} - UF: ${dep.siglaUf}`;
+                        document.getElementById('emailDeputado').value = dep.email ? dep.email : 'Não informado';
+                        document.getElementById('cardDeputado').style.display = 'block';
+                        document.getElementById('mensagem').textContent = '';
+                    }
+                })
+                .catch(() => {
+                    // Esconde o card e mostra mensagem de erro
+                    document.getElementById('cardDeputado').style.display = 'none';
+                    document.getElementById('mensagem').textContent = 'Erro ao buscar deputados.';
+                });
+        });
+    </script>
+</body>
+</html>
