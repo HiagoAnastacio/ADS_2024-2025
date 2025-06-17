@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Object Model (DOM)</title>
+</head>
+<body>
+    <h2>Html DOM</h2>
+    <form action="" id="form1">
+        Nome: <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required autofocus>
+        Sobrenome: <input type="text" id="sobrenome" name="sobrenome" placeholder="Digite seu sobrenome" required>
+        <button type="submit" value="">Enviar</button>
+    </form>
+    <p>Estes são o valor do formulário:</p>
+    <p id="resultado"></p>
+
+    <!-- <h1>Cabeçalho</h1>
+    <p id="demo">parágrafo</p>
+    <p class="demo1"></p>
+    <p class="demo2"></p> -->
+
+    <script>
+
+        const x = document.forms["form1"];
+        let txt = "";
+        for (let i = 0; i < x.length; i++) {
+            txt += x.elements[i].value + "<br>";
+        }
+
+
+        document.getElementById("resultado").innerHTML = txt;
+
+        // document.querySelector("#demo").innerHTML = "Texto alterado pelo JavaScript";
+        // document.querySelector(".demo1").innerHTML = "Outro parágrafo alterado pelo JavaScript";
+        // document.querySelectorAll(".demo2")[0].innerHTML = "Mais um parágrafo alterado pelo JavaScript";
+    
+    </script>
+</body>
+</html>

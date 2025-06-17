@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>animacao</title>
+</head>
+<body>
+    <h3>Clique no botão para ver o truque</h3>
+    <p><button onclick="animacao()">TRUQUE!</button></p>
+    <div id="contender">
+        <div id="animar"></div>
+    </div>
+    <style>
+        #contender {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+        #animar {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: rgb(0, 0, 0);
+            text-align: center;
+            line-height: 50px;
+            color: white;
+        }
+    </style>
+    <script>
+        function animacao(){
+            let id = null;
+            const elem = document.querySelector("#animar");
+            let pos = 0;
+            clearInterval(id);
+            id = setInterval(frame, 5);
+            function frame() {
+                if (pos >= 350) {
+                    clearInterval(id);
+                } else {
+                    pos++;
+                    elem.style.top = pos + 'px';
+                    elem.style.left = pos + 'px';
+                }
+            }
+        }
+        animacao();
+    </script>
+</body>
+</html>

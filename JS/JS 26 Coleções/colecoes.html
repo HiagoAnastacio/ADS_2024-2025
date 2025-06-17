@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coleções</title>
+</head>
+<body>
+    <h2>Coleções HTML Javascript</h2>
+    <p>Alô Mundo!</p>
+    <p>Alô Teste!</p>
+    <p id="teste"></p>
+    <script>
+        const colecao = document.querySelectorAll('p');
+        colecao[2].textContent = 'Alô Coleção!';
+        colecao[0].textContent = 'Alô Mundo Alterado!';
+        console.log(colecao.length);
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Objeto Javascript</title>
+</head>
+<body>
+    <h2>Acessando um objeto Javascript</h2>
+    <p id="demo1"></p>
+    <script>
+        const objPessoa = {
+            nome: 'Junior',
+            idade: 17,
+            cidade: 'São Paulo',
+
+            nacimento: function() {
+                return new Date().getFullYear() - this.idade;
+            }
+        };
+
+        document.querySelector('#demo1').innerHTML = objPessoa.nome + ' tem ' + objPessoa.idade + ' anos e nasceu em ' + objPessoa.nacimento() + '.';
+
+        const meuJSON = JSON.stringify(objPessoa);
+        console.log(meuJSON);
+
+        const objPessoa2 = JSON.parse(meuJSON);
+        console.log(objPessoa2);
+        console.log(objPessoa2.nome);
+    </script>
+</body>
+</html>

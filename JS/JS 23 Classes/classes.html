@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classes</title>
+</head>
+<body>
+    <h1>Classes em JavaScript</h1>
+    <p>Criando classe carro</p>
+    <p id="demo"></p>
+    <p id="demo1"></p>
+    <p id="demo2"></p>
+
+    <script>
+        class Carro {
+            constructor(m, a) {
+                this.marca = m;
+                this.ano = a;
+            }
+            nomeCarro(m){
+                this.marca = m;
+            }
+            anoCarro(a) {
+                this.ano = a;
+            }
+            idade() {
+                const anoAtual = new Date().getFullYear();
+                return anoAtual - this.ano;
+            }
+        }
+        class Caminhao extends Carro {
+            constructor(m, a, c) {
+                super(m, a);
+                this.carga = c;
+            }
+            capacidadeCarga(c) {
+                this.carga = c;
+            }
+        } 
+        const carro1 = new Carro("Volkswagen", 2008);
+        carro1.nomeCarro("Audi");
+
+        const carro2 = new Carro("Porsche", 2024);
+        carro2.anoCarro(2011);
+
+        const caminhao1 = new Caminhao("Mercedes", 2015, "10 toneladas");
+        caminhao1.capacidadeCarga("15 toneladas");
+
+        document.querySelector("#demo").innerHTML = 
+            "Carro 1: " + carro1.marca + " | Ano: " + carro1.ano + " | Idade: " + carro1.idade() + " anos" + "<br>";
+
+
+        document.querySelector("#demo1").innerHTML = 
+            "Carro 2: " + carro2.marca + " | Ano: " + carro2.ano + " | Idade: " + carro2.idade() + " anos";
+    
+        document.querySelector("#demo2").innerHTML = 
+            "Caminhão: " + caminhao1.marca + " | Ano: " + caminhao1.ano + " | Idade: " + caminhao1.idade() + " anos" + " | Capacidade de Carga: " + caminhao1.carga;
+
+    </script>
+
+</body>
+</html>
