@@ -1,26 +1,15 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import Buscar from './component/Buscar.jsx'
- 
-const Cartao = ({título}) => {
-  const [curtiu, setCurtiu] = useState(false);
-  const [contagem, setContagem] = useState(0);
-  useEffect(()=>{
-    console.log(`${título} foi curtido: ${curtiu}`);
-  }, [curtiu]);
-  return(
-    <div className="text-3xl underline text-red-500" onClick={()=>setContagem(contagem + 1)}>
-      <h2>{título}</h2>
-      <h2>{contagem}</h2>
-      <button onClick={()=>setCurtiu(!curtiu)}>
-        {curtiu? "❤️" : "🤍"}
-      </button>
-    </div>
-  )
-}
+import Search from './component/Seach.jsx'
+import Spinner from './component/Spinner.jsx';
+import Card from './component/Card.jsx'
  
 const App = () => {
-  const [termoBusca, setTermoBusca] = useState("");
+  const [termSeach, setTermSeach] = useState("");
+  const [errorMenssage, setErrorMenssage] = useState("");
+  const [movieList, setMovieList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const API_TOKEN = import.meta.env.VITE_TMDB_API_TOKEN;
   const API_URL_BASE=''
   const API_OPTION = {
@@ -30,8 +19,9 @@ const App = () => {
       Authorization: `Bearer ${API_TOKEN}`,
     }
   }
-  const [errorMenssage, setErrorMenssage] = useState("");
   const fetchMovies = async () => {
+    setIsLoading(true);
+    setErrorMenssage("");
     try{
       const endpoint = `${API_URL_BASE}/discover/movie?sort_by=popularity.desc`;
       const response = await fetch(endpoint, API_OPTION);
@@ -39,6 +29,11 @@ const App = () => {
         throw new Error(`Erro na requisição.`);
       }
       const data = await response.json();
+
+      if (data.Response == 'false') {
+        setErrorMenssage(data.Error || "Falha ao buscar filmes.");
+        setMovieList([]);
+      }
     }
     catch (error) {
       console.error(`Erro ao buscar filmes: ${error}`);
@@ -47,7 +42,7 @@ const App = () => {
   }
   useEffect(() => {
     fetchMovies();
-  },[]);
+  }, [])
   return(
     <main>
       <div className='pattern'></div>
@@ -57,20 +52,27 @@ const App = () => {
           <h1>
             Encontre Os <span className="text-gradient">Filmes</span> Que Você Vai Gostar
           </h1>
-        </header>
-          {/* <h2>Componente Funcional</h2>
-          <Cartao título="Adão Negro"/>
-          <Cartao título="Vingadores: Ultimato"/>
-          <Cartao título="Homens de preto"/>  */}
-          <Buscar termoBusca={termoBusca} setTermoBusca={setTermoBusca}/>
-          <h1 className='text-white'>{termoBusca}</h1>
+        </header>   
+          <Search termSeach={termSeach} setTermSeach={setTermSeach}/>
+          <h1 className='text-white'>{termSeach}</h1>
           <section className='all-movies'>
             <h2>Todos os filmes</h2>
-            {errorMenssage && <p className='text-red-500'>{errorMenssage}</p>}
+            {isLoading ? /* Operador "Elvis" (operador de verdadeiro ou falso) */ (  ///Verifica se o isLoading é verdadeiro, se sim, exibe a mensagem de carregamento
+                <Spinner/>
+              ): errorMenssage ?(
+                <p className='text-red-500'>{errorMenssage}</p>
+              ):(
+              <ul>{
+                movieList.map((movie) => (
+                  <Card movie={movie}/>
+                ))
+              }
+              </ul>
+              )
+            }
           </section>
       </div>
     </main>
- 
  
   )
 }
