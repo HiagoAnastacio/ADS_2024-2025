@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react'
+import { useDebounce } from 'react-use';
 import './App.css'
-import Search from './component/Seach.jsx'
+import Search from './component/Search.jsx'
 import Spinner from './component/Spinner.jsx';
 import Card from './component/Card.jsx'
  
 const App = () => {
-  const [termSeach, setTermSeach] = useState("");
-  const [errorMenssage, setErrorMenssage] = useState("");
+  const [termSearch, setTermSearch] = useState("");
+  const [errorMenssage, setErrorMenssage] = useState('');
   const [movieList, setMovieList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [debouncedTerm, setDebouncedTerm] = useState('');
 
+  useDebounce(() => setDebouncedTerm(termSearch), 500, [termSearch]); // Hook para debouncing, que espera 500ms antes de atualizar o termo de busca.
   const API_TOKEN = import.meta.env.VITE_TMDB_API_TOKEN;
-  const API_URL_BASE=''
+  const API_URL_BASE='' 
   const API_OPTION = {
     method: 'GET',
     headers: {
@@ -19,11 +22,14 @@ const App = () => {
       Authorization: `Bearer ${API_TOKEN}`,
     }
   }
-  const fetchMovies = async () => {
+  const fetchMovies = async (query = "") => { //Função assíncrona para buscar filmes da API que é ativada sempre que algum valor de 'termSearch' é alterado.
     setIsLoading(true);
     setErrorMenssage("");
     try{
-      const endpoint = `${API_URL_BASE}/discover/movie?sort_by=popularity.desc`;
+      const endpoint = query?
+      `${API_URL_BASE}/search/movie?query=${query}`
+      
+      :`${API_URL_BASE}/discover/movie?sort_by=popularity.desc`;
       const response = await fetch(endpoint, API_OPTION);
       if (!response.ok) {
         throw new Error(`Erro na requisição.`);
@@ -39,11 +45,16 @@ const App = () => {
       console.error(`Erro ao buscar filmes: ${error}`);
       setErrorMenssage("Erro ao buscar filmes. Tente novamente mais tarde.");
     }
+    finally {
+      setIsLoading(false);
+    }
   }
-  useEffect(() => {
-    fetchMovies();
-  }, [])
-  return(
+
+  useEffect(() => { // Um hook para lidar com efeitos colaterais, como buscar dados de uma API.
+    fetchMovies(termSearch); // A passagem do valor 'termSearch' para 'query' na chamada de 'feachMovies'
+  }, [termSearch]) 
+
+  return( // Retorna o JSX que será renderizado na tela.
     <main>
       <div className='pattern'></div>
       <div className="wrapper">
@@ -53,8 +64,8 @@ const App = () => {
             Encontre Os <span className="text-gradient">Filmes</span> Que Você Vai Gostar
           </h1>
         </header>   
-          <Search termSeach={termSeach} setTermSeach={setTermSeach}/>
-          <h1 className='text-white'>{termSeach}</h1>
+          <Search termSearch={termSearch} setTermSearch={setTermSearch}/>
+          <h1 className='text-white'>{termSearch}</h1>
           <section className='all-movies'>
             <h2>Todos os filmes</h2>
             {isLoading ? /* Operador "Elvis" (operador de verdadeiro ou falso) */ (  ///Verifica se o isLoading é verdadeiro, se sim, exibe a mensagem de carregamento
